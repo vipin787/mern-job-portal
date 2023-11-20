@@ -8,11 +8,10 @@ const errorMiddleware = (err, req, res, next) => {
   };
   res.status(500).send({
     success: false,
-    message: "something went wrong",
-    err,
+    message: err,
   });
 
-//     missing field error
+  //     missing field error
   if (err.name === "ValidationError") {
     defaultErrors.statusCode = 400;
     defaultErrors.message = Object.values(err.errors)
