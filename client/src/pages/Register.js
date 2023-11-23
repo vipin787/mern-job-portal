@@ -1,47 +1,82 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import InputForm from "../components/InputForm";
 
 const Register = () => {
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      console.log(name, lastName, email, password);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <form>
-        <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
+      <div className="form-container">
+        <form className="card p-2" onSubmit={handleSubmit}>
+          <img
+            src="/assets/images/logo/logo.png"
+            alt=""
+            height={150}
+            width={400}
           />
-          <div id="emailHelp" className="form-text">
-            We'll never share your email with anyone else.
+          <InputForm
+            htmlFor="name"
+            labelText={"Name"}
+            type={"text"}
+            value={name}
+            handleChange={(e) => setName(e.target.value)}
+            name="name"
+          />
+         
+          <InputForm
+            htmlFor="lastName"
+            labelText={"Last Name"}
+            type={"text"}
+            value={lastName}
+            handleChange={(e) => setLastName(e.target.value)}
+            name="lastName"
+          />
+          <InputForm
+            htmlFor="email"
+            labelText={"Email"}
+            type={"email"}
+            value={email}
+            handleChange={(e) => setEmail(e.target.value)}
+            name="email"
+          />
+           <InputForm
+            htmlFor="password"
+            labelText={"Password"}
+            type={"password"}
+            value={password}
+            handleChange={(e) => setPassword(e.target.value)}
+            name="password"
+          />
+          
+          {/* <div className="mb-3">
+            <label htmlFor="location" className="form-label">
+              Location
+            </label>
+            <input type="text" className="form-control" name="location" />
+          </div> */}
+          <div className="d-flex justify-content-end">
+            <p>
+              Already Register <Link to="/login">Login</Link>
+            </p>
           </div>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="exampleInputPassword1"
-          />
-        </div>
-        <div className="mb-3 form-check">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            id="exampleCheck1"
-          />
-          <label className="form-check-label" htmlFor="exampleCheck1">
-            Check me out
-          </label>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
-      </form>
+          <button type="submit" className="btn btn-primary">
+            Register
+          </button>
+        </form>
+      </div>
     </>
   );
 };
