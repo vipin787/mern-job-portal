@@ -1,23 +1,52 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputForm from "../components/InputForm";
+import { useDispatch, useSelector } from "react-redux";
+import Spinner from "../components/shared/Spinner";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { hideLoading, showLoading } from "../redux/features/alertSlice";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const {loading} = useSelector(state => state.alerts)
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
     try {
       console.log(email, password);
+      if(!email || !password) {
+       return alert('Please Provide All Fields')
+      }
+      dispatch(showLoading())
+
+      const {data} = await axios.post('/api/v1/auth/login', {
+        email, password
+      })
+      dispatch(hideLoading());
+      if(data.success) {
+        localStorage.setItem('token', data.token)
+        toast.success('Login Successfully');
+        navigate('/dashboard')
+      }
     } catch (error) {
+      dispatch(hideLoading())
+      toast.error('Invalid Credential Please Try Again!')
       console.log(error);
     }
   };
 
   return (
     <>
-      <div className="form-container">
+      {
+        loading ? (<Spinner />) : (
+          <div className="form-container">
         <form className="card p-2" onSubmit={handleSubmit}>
           <img
             src="/assets/images/logo/logo.png"
@@ -54,11 +83,13 @@ const Login = () => {
             Not a User <Link to="/register">Register Here</Link>
             </p>
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
             Login
           </button>
         </form>
       </div>
+        )
+      }
     </>
   );
 };
